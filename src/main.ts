@@ -1,3 +1,4 @@
+import "./app.pcss";
 import App from "./App.svelte";
 import "reset-css";
 
