@@ -1,5 +1,5 @@
 <script lang="ts"></script>
 
-<main class="container">
-  <h1>Welcome to Tauri!</h1>
-</main>
+<main class="container"></main>
+
+<style lang="less" scoped></style>
