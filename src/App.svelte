@@ -5,8 +5,16 @@
     let countries = [{ value: "traffic", name: "交通" }];
     const form = {
         date: "",
-        type: "",
-        amount: 0,
+        billList: [
+            {
+                type: "",
+                amount: 0,
+            },
+            {
+                type: "traffic",
+                amount: 1,
+            },
+        ],
         totalAmount: 0,
     };
 
@@ -35,22 +43,24 @@
                 type="date"
             />
         </Label>
-        <div class="flex justify-between">
-            <Label class="space-y-2 w-2/5">
-                <span>类别</span>
-                <Select bind:value={form.type} items={countries} />
-            </Label>
-            <Label class="space-y-2 w-2/5">
-                <span>金额</span>
-                <Input
-                    bind:value={form.amount}
-                    id="amount"
-                    name="amount"
-                    required
-                    type="number"
-                />
-            </Label>
-        </div>
+        {#each form.billList as item}
+            <div class="flex justify-between">
+                <Label class="space-y-2 w-2/5">
+                    <span>类别</span>
+                    <Select bind:value={item.type} items={countries} />
+                </Label>
+                <Label class="space-y-2 w-2/5">
+                    <span>金额</span>
+                    <Input
+                        bind:value={item.amount}
+                        id="amount"
+                        name="amount"
+                        required
+                        type="number"
+                    />
+                </Label>
+            </div>
+        {/each}
         <div class="flex justify-between">
             <div>总金额（元）</div>
             <div class="font-semibold">{form.totalAmount}</div>
