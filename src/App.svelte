@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { invoke } from "@tauri-apps/api/tauri";
     import { Button, Modal, Label, Input, Select } from "flowbite-svelte";
     // 打开模态框
     let formModal = false;
@@ -20,7 +21,10 @@
 
     /** 提交表单 */
     const submit = () => {
-        console.log(form);
+        const res = invoke("greet");
+        console.log(res);
+
+        // console.log(form);
     };
 </script>
 

@@ -5,13 +5,14 @@ mod db_handler;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+fn greet() -> Vec<db_handler::Bill> {
+    // 创建数据库
+    let db_handler_struct = db_handler::DbHandlerStruct::new("bill.db");
+    let _ = db_handler_struct.create_db();
+    db_handler_struct.get_bill().unwrap()
 }
 
 fn main() {
-    // 创建数据库
-    let _ = db_handler::create_db();
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![greet])
         .run(tauri::generate_context!())

@@ -1,8 +1,8 @@
 [package]
 name = "book-keeping"
-version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
+version = "1.0.0"
+description = "基于 Tauri Rust Svelte 跨平台的桌面端记账工具"
+authors = ["CherryBlossomHope"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -13,7 +13,6 @@ tauri-build = { version = "1.5", features = [] }
 [dependencies]
 tauri = { version = "1.5", features = ["shell-open"] }
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
 
 [dependencies.rusqlite]
 version = "0.30.0"
