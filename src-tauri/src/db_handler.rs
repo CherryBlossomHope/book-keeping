@@ -61,3 +61,11 @@ impl DbHandlerStruct {
         Ok(bill_vac)
     }
 }
+
+// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+#[tauri::command]
+pub fn render_get_bill() -> Vec<Bill> {
+    let db_handler_struct = DbHandlerStruct::new("bill.db");
+    let _ = db_handler_struct.create_db();
+    db_handler_struct.get_bill().unwrap()
+}
