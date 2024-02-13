@@ -8,6 +8,14 @@ pub struct Bill {
     total_amount: i32,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct BillDetails {
+    id: i32,
+    bill_type: String,
+    amount: i32,
+    bill_id: i32,
+}
+
 #[derive(Debug)]
 pub struct DbHandlerStruct {
     db: Connection,
@@ -60,6 +68,31 @@ impl DbHandlerStruct {
         }
         Ok(bill_vac)
     }
+
+    pub fn get_bill_details(&self, id: i32) -> rusqlite::Result<Vec<BillDetails>> {
+        let mut sql =
+            String::from("SELECT id, type, amount, bill_id FROM bill_item WHERE bill_id = ");
+        sql.push_str(&id.to_string());
+
+        let mut res = self.db.prepare(&sql)?;
+        let mut bill_vac: Vec<BillDetails> = Vec::new();
+
+        let bill_iter = res.query_map([], |row| {
+            Ok(BillDetails {
+                id: row.get(0)?,
+                bill_type: row.get(1)?,
+                amount: row.get(2)?,
+                bill_id: row.get(3)?,
+            })
+        })?;
+
+        for b in bill_iter {
+            if let Ok(bill) = b {
+                bill_vac.push(bill)
+            }
+        }
+        Ok(bill_vac)
+    }
 }
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -68,4 +101,10 @@ pub fn render_get_bill() -> Vec<Bill> {
     let db_handler_struct = DbHandlerStruct::new("bill.db");
     let _ = db_handler_struct.create_db();
     db_handler_struct.get_bill().unwrap()
+}
+
+#[tauri::command]
+pub fn render_get_bill_details(id: i32) -> Vec<BillDetails> {
+    let db_handler_struct = DbHandlerStruct::new("bill.db");
+    db_handler_struct.get_bill_details(id).unwrap()
 }

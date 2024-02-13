@@ -1,8 +1,20 @@
 <script lang="ts">
+    import { formatDate } from "./utils";
     import { invoke } from "@tauri-apps/api/tauri";
     import { Button, Modal, Label, Input, Select } from "flowbite-svelte";
+    import {
+        Table,
+        TableBody,
+        TableBodyCell,
+        TableBodyRow,
+        TableHead,
+        TableHeadCell,
+    } from "flowbite-svelte";
+
     // 打开模态框
     let formModal = false;
+    // 账单数据
+    let billData: Bill[] = [];
     let countries = [{ value: "traffic", name: "交通" }];
     const form = {
         date: "",
@@ -19,13 +31,21 @@
         totalAmount: 0,
     };
 
-    /** 提交表单 */
-    const submit = () => {
-        const res = invoke("render_get_bill");
-        console.log(res);
-
-        // console.log(form);
+    /** 获取账单数据 */
+    const getBillData = async () => {
+        billData = await invoke("render_get_bill");
     };
+
+    // 获取账单数据
+    getBillData();
+
+    const getDetails = async (id: number) => {
+        const res = await invoke("render_get_bill_details", { id });
+        console.log(res);
+    };
+
+    /** 提交表单 */
+    const submit = () => {};
 </script>
 
 <div class="p-3.5">
@@ -33,10 +53,39 @@
     <div class="text-right">
         <Button on:click={() => (formModal = true)} size="xs">新增账单</Button>
     </div>
+    <Table striped={true}>
+        <TableHead>
+            <TableHeadCell>Id</TableHeadCell>
+            <TableHeadCell>时间</TableHeadCell>
+            <TableHeadCell class="text-center">金额</TableHeadCell>
+            <TableHeadCell>
+                <span class="sr-only">Edit</span>
+            </TableHeadCell>
+        </TableHead>
+        <TableBody>
+            {#each billData as item}
+                <TableBodyRow>
+                    <TableBodyCell>{item.id}</TableBodyCell>
+                    <TableBodyCell>{formatDate(item.date)}</TableBodyCell>
+                    <TableBodyCell class="text-center"
+                        >￥{item.total_amount}</TableBodyCell
+                    >
+                    <TableBodyCell class="text-center">
+                        <Button
+                            on:click={() => getDetails(item.id)}
+                            size="xs"
+                            color="light"
+                            pill>详情</Button
+                        >
+                    </TableBodyCell>
+                </TableBodyRow>
+            {/each}
+        </TableBody>
+    </Table>
 </div>
 
 <Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
-    <form class="flex flex-col space-y-6" action="#">
+    <form class="flex flex-col space-y-6">
         <Label class="space-y-2">
             <span>日期</span>
             <Input

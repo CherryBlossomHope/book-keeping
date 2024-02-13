@@ -5,7 +5,10 @@ mod db_handler;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![db_handler::render_get_bill])
+        .invoke_handler(tauri::generate_handler![
+            db_handler::render_get_bill,
+            db_handler::render_get_bill_details
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
