@@ -21,7 +21,7 @@
 
     /** 提交表单 */
     const submit = () => {
-        const res = invoke("greet");
+        const res = invoke("render_get_bill");
         console.log(res);
 
         // console.log(form);

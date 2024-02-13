@@ -27,7 +27,7 @@ impl DbHandlerStruct {
                  date integer not null unique,
                  total_amount integer not null
              )",
-            (),
+            [],
         )?;
         self.db.execute(
             "create table if not exists bill_item (
@@ -36,13 +36,13 @@ impl DbHandlerStruct {
                  amount integer not null,
                  bill_id integer not null references bill (id)
              )",
-            (),
+            [],
         )?;
         Ok(())
     }
 
     pub fn get_bill(&self) -> rusqlite::Result<Vec<Bill>> {
-        let mut res = self.db.prepare("SELECT * FROM bill")?;
+        let mut res = self.db.prepare("SELECT id, date, total_amount FROM bill")?;
         let mut bill_vac: Vec<Bill> = Vec::new();
 
         let bill_iter = res.query_map([], |row| {
