@@ -1,5 +1,7 @@
+use dirs::data_local_dir;
 use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
+use std::fs;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Bill {
@@ -22,9 +24,13 @@ pub struct DbHandlerStruct {
 }
 
 impl DbHandlerStruct {
-    pub fn new(path: &str) -> DbHandlerStruct {
+    pub fn new() -> DbHandlerStruct {
+        // 根据操作系统获取存储路径
+        let mut app_data_path = data_local_dir().unwrap();
+        // 拼接路径
+        app_data_path.push("BookKeeping/bill.db");
         DbHandlerStruct {
-            db: Connection::open(path).unwrap(),
+            db: Connection::open(&app_data_path).unwrap(),
         }
     }
 
@@ -95,16 +101,33 @@ impl DbHandlerStruct {
     }
 }
 
+/** 创建程序配置目录 */
+pub fn create_db_dir() {
+    // 根据操作系统获取存储路径
+    let mut app_data_path = data_local_dir().unwrap();
+    // 拼接路径
+    app_data_path.push("BookKeeping");
+    // 检查路径是否存在
+    let dir_exist = match fs::metadata(&app_data_path) {
+        Ok(_) => true,
+        Err(_) => false,
+    };
+    // 创建文件
+    if !dir_exist {
+        fs::create_dir(app_data_path).unwrap();
+    }
+}
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 pub fn render_get_bill() -> Vec<Bill> {
-    let db_handler_struct = DbHandlerStruct::new("bill.db");
+    let db_handler_struct = DbHandlerStruct::new();
     let _ = db_handler_struct.create_db();
     db_handler_struct.get_bill().unwrap()
 }
 
 #[tauri::command]
 pub fn render_get_bill_details(id: i32) -> Vec<BillDetails> {
-    let db_handler_struct = DbHandlerStruct::new("bill.db");
+    let db_handler_struct = DbHandlerStruct::new();
     db_handler_struct.get_bill_details(id).unwrap()
 }

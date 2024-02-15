@@ -4,6 +4,8 @@
 mod db_handler;
 
 fn main() {
+    // 创建数据库目录
+    db_handler::create_db_dir();
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             db_handler::render_get_bill,
