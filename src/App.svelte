@@ -45,7 +45,9 @@
     };
 
     /** 提交表单 */
-    const submit = () => {};
+    const submit = () => {
+        console.log(form);
+    };
 </script>
 
 <div class="p-3.5">
@@ -118,8 +120,6 @@
             <div>总金额（元）</div>
             <div class="font-semibold">{form.totalAmount}</div>
         </div>
-        <Button type="submit" class="w-full1" on:click={() => submit()}
-            >提交</Button
-        >
+        <Button class="w-full1" on:click={() => submit()}>提交</Button>
     </form>
 </Modal>

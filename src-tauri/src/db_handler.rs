@@ -25,10 +25,10 @@ pub struct DbHandlerStruct {
 
 impl DbHandlerStruct {
     pub fn new() -> DbHandlerStruct {
-        // 根据操作系统获取存储路径
+        // 根据操作系统获取存储路径 C:\Users\xxx\AppData\Local
         let mut app_data_path = data_local_dir().unwrap();
         // 拼接路径
-        app_data_path.push("BookKeeping/bill.db");
+        app_data_path.push("BookKeeping/databaes/bill.db");
         DbHandlerStruct {
             db: Connection::open(&app_data_path).unwrap(),
         }
@@ -106,7 +106,7 @@ pub fn create_db_dir() {
     // 根据操作系统获取存储路径
     let mut app_data_path = data_local_dir().unwrap();
     // 拼接路径
-    app_data_path.push("BookKeeping");
+    app_data_path.push("BookKeeping/databaes");
     // 检查路径是否存在
     let dir_exist = match fs::metadata(&app_data_path) {
         Ok(_) => true,
